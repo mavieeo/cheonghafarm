@@ -112,7 +112,6 @@ async function submitOrder(){
   if(TOSS_CLIENT_KEY.includes('여기에_'))return alert('토스페이먼츠 클라이언트 키를 먼저 입력해주세요.');
   if(!db){alert('주문 및 결제는 공개된 쇼핑몰에서 이용해주세요.');return;}
   if(typeof window.TossPayments!=='function'){bodyEl.insertAdjacentHTML('afterbegin','<div class="notice error">결제 모듈을 불러오지 못했습니다. 페이지를 새로고침한 뒤 다시 시도해주세요.</div>');return;}
-
   orderSubmitting=true;
   const button=document.getElementById('payButton');
   if(button){button.disabled=true;button.textContent='주문 확인 중…';}
@@ -129,16 +128,12 @@ async function submitOrder(){
     const subtotal=cart.reduce((s,x)=>s+x.option.price*x.qty,0);
     const expectedTotal=subtotal+totalForShipping(subtotal);
     const amount=Number(orderData?.total_amount??orderData?.totalAmount??expectedTotal);
-    if(!orderId){throw new Error('주문은 저장됐지만 주문번호를 응답받지 못했습니다. 주문 목록을 확인한 뒤 고객센터에 문의해주세요.');}
-    if(!Number.isFinite(amount)||amount<=0){throw new Error('결제 금액을 확인할 수 없습니다. 주문번호 '+orderId+'를 확인해주세요.');}
+    if(!orderId)throw new Error('주문은 저장됐지만 주문번호를 응답받지 못했습니다. 주문 목록을 확인한 뒤 고객센터에 문의해주세요.');
+    if(!Number.isFinite(amount)||amount<=0)throw new Error('결제 금액을 확인할 수 없습니다. 주문번호 '+orderId+'를 확인해주세요.');
     if(button)button.textContent='결제창 여는 중…';
     const tossPayments=window.TossPayments(TOSS_CLIENT_KEY);
     const orderName=cart.length===1?(product?.name||'청하농원 블루베리')+' '+cart[0].option.option_name:((product?.name||'청하농원 블루베리')+' 외 '+(cart.length-1)+'건');
-    await tossPayments.requestPayment('카드',{
-      amount,orderId,orderName,customerName:name,customerEmail:email||undefined,
-      customerMobilePhone:phone.replace(/[^0-9]/g,''),
-      successUrl:location.origin+location.pathname,failUrl:location.origin+location.pathname
-    });
+    await tossPayments.requestPayment('카드',{amount,orderId,orderName,customerName:name,customerEmail:email||undefined,customerMobilePhone:phone.replace(/[^0-9]/g,''),successUrl:location.origin+location.pathname,failUrl:location.origin+location.pathname});
   }catch(e){
     const msg=e?.message||'요청 처리 중 오류가 발생했습니다.';
     bodyEl.querySelectorAll('.notice.error').forEach(el=>el.remove());
