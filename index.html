@@ -33,7 +33,7 @@ const SUPABASE_URL='https://bnhfjhixmjlyinjruhpi.supabase.co';
 const SUPABASE_KEY='sb_publishable_7NUZCNlQs8-nDViiUpYppA_8F0PZJx5';
 const db=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY):null;
 const TOSS_CLIENT_KEY='test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
-let product=null,options=[],selectedOption=null,qty=1,cart=[];
+let product=null,options=[],selectedOption=null,qty=1,cart=[],orderSubmitting=false;
 
 const won=n=>Number(n).toLocaleString('ko-KR')+'원';
 async function loadProduct(){
@@ -95,34 +95,56 @@ function renderCart(){
 }
 
 function buyNow(){if(!selectedOption)return;cart=[{option:selectedOption,qty}];updateCount();checkout()}
-function checkout(){document.getElementById('sheetTitle').textContent='주문서';document.getElementById('cartBody').innerHTML=`<div class="notice">주문 정보를 확인한 뒤 결제하기를 누르면 토스페이먼츠 결제창으로 이동합니다.</div><div class="checkout"><label>주문자명 *</label><input id="c_name" placeholder="홍길동"><label>휴대폰 *</label><input id="c_phone" placeholder="010-0000-0000"><label>이메일</label><input id="c_email" type="email" placeholder="example@email.com"><label>우편번호</label><input id="c_postcode" placeholder="우편번호"><label>주소 *</label><input id="c_address1" placeholder="주소를 입력해주세요"><label>상세주소</label><input id="c_address2" placeholder="상세주소"><label>배송 요청사항</label><textarea id="c_memo" rows="3" placeholder="배송 요청사항을 입력해주세요"></textarea><button class="btn" style="width:100%;margin-top:20px" onclick="submitOrder()">결제하기</button></div>`}
+function checkout(){orderSubmitting=false;document.getElementById('sheetTitle').textContent='주문서';document.getElementById('cartBody').innerHTML=`<div class="notice">주문 정보를 확인한 뒤 결제하기를 누르면 토스페이먼츠 결제창으로 이동합니다.</div><div class="checkout"><label>주문자명 *</label><input id="c_name" autocomplete="name" placeholder="홍길동"><label>휴대폰 *</label><input id="c_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000"><label>이메일</label><input id="c_email" type="email" autocomplete="email" placeholder="example@email.com"><label>우편번호</label><input id="c_postcode" autocomplete="postal-code" placeholder="우편번호"><label>주소 *</label><input id="c_address1" autocomplete="street-address" placeholder="주소를 입력해주세요"><label>상세주소</label><input id="c_address2" autocomplete="address-line2" placeholder="상세주소"><label>배송 요청사항</label><textarea id="c_memo" rows="3" placeholder="배송 요청사항을 입력해주세요"></textarea><button id="payButton" class="btn" style="width:100%;margin-top:20px" onclick="submitOrder()">결제하기</button></div>`}
 async function submitOrder(){
-  const name=document.getElementById('c_name').value.trim(),phone=document.getElementById('c_phone').value.trim(),email=document.getElementById('c_email').value.trim(),postcode=document.getElementById('c_postcode').value.trim(),address1=document.getElementById('c_address1').value.trim(),address2=document.getElementById('c_address2').value.trim(),memo=document.getElementById('c_memo').value.trim();
+  if(orderSubmitting)return;
+  const name=document.getElementById('c_name')?.value.trim()||'';
+  const phone=document.getElementById('c_phone')?.value.trim()||'';
+  const email=document.getElementById('c_email')?.value.trim()||'';
+  const postcode=document.getElementById('c_postcode')?.value.trim()||'';
+  const address1=document.getElementById('c_address1')?.value.trim()||'';
+  const address2=document.getElementById('c_address2')?.value.trim()||'';
+  const memo=document.getElementById('c_memo')?.value.trim()||'';
+  const bodyEl=document.getElementById('cartBody');
   if(!name||!phone||!address1)return alert('주문자명, 휴대폰, 주소는 필수입니다.');
+  if(phone.replace(/[^0-9]/g,'').length<9)return alert('휴대폰 번호를 확인해주세요.');
   if(!cart.length)return alert('주문 상품이 없습니다.');
   if(TOSS_CLIENT_KEY.includes('여기에_'))return alert('토스페이먼츠 클라이언트 키를 먼저 입력해주세요.');
+  if(!db){alert('주문 및 결제는 공개된 쇼핑몰에서 이용해주세요.');return;}
+  if(typeof window.TossPayments!=='function'){bodyEl.insertAdjacentHTML('afterbegin','<div class="notice error">결제 모듈을 불러오지 못했습니다. 페이지를 새로고침한 뒤 다시 시도해주세요.</div>');return;}
 
-  if(!db){alert('주문 및 결제는 인터넷에 게시된 사이트에서 이용해주세요. 현재 파일 미리보기에서는 장바구니만 테스트할 수 있습니다.');return;}
-  const {data,error}=await db.functions.invoke('create-order',{body:{p_customer_name:name,p_phone:phone,p_email:email,p_postcode:postcode,p_address1:address1,p_address2:address2,p_shipping_memo:memo,p_items:cart.map(x=>({product_option_id:x.option.id,quantity:x.qty}))}});
-  if(error){document.getElementById('cartBody').insertAdjacentHTML('afterbegin','<div class="notice error">'+(error.message||'주문 생성에 실패했습니다.')+'</div>');return}
-
-  const subtotal=cart.reduce((s,x)=>s+x.option.price*x.qty,0); const total=subtotal+totalForShipping(subtotal);
-  const tossPayments=TossPayments(TOSS_CLIENT_KEY);
-  const orderName=cart.length===1?product.name+' '+cart[0].option.option_name:(product.name+' 외 '+(cart.length-1)+'건');
-
+  orderSubmitting=true;
+  const button=document.getElementById('payButton');
+  if(button){button.disabled=true;button.textContent='주문 확인 중…';}
+  bodyEl.querySelectorAll('.notice.error').forEach(el=>el.remove());
   try{
-    await tossPayments.requestPayment('카드', {
-      amount: data.total_amount || total,
-      orderId: data.order_number,
-      orderName,
-      customerName:name,
-      customerEmail:email || undefined,
+    const {data,error}=await db.functions.invoke('create-order',{body:{
+      p_customer_name:name,p_phone:phone,p_email:email||null,p_postcode:postcode||null,
+      p_address1:address1,p_address2:address2||null,p_shipping_memo:memo||null,
+      p_items:cart.map(x=>({product_option_id:x.option.id,quantity:x.qty}))
+    }});
+    if(error)throw new Error(error.message||'주문 저장에 실패했습니다.');
+    const orderData=Array.isArray(data)?data[0]:data;
+    const orderId=orderData?.order_number||orderData?.orderNumber||orderData?.order?.order_number;
+    const subtotal=cart.reduce((s,x)=>s+x.option.price*x.qty,0);
+    const expectedTotal=subtotal+totalForShipping(subtotal);
+    const amount=Number(orderData?.total_amount??orderData?.totalAmount??expectedTotal);
+    if(!orderId){throw new Error('주문은 저장됐지만 주문번호를 응답받지 못했습니다. 주문 목록을 확인한 뒤 고객센터에 문의해주세요.');}
+    if(!Number.isFinite(amount)||amount<=0){throw new Error('결제 금액을 확인할 수 없습니다. 주문번호 '+orderId+'를 확인해주세요.');}
+    if(button)button.textContent='결제창 여는 중…';
+    const tossPayments=window.TossPayments(TOSS_CLIENT_KEY);
+    const orderName=cart.length===1?(product?.name||'청하농원 블루베리')+' '+cart[0].option.option_name:((product?.name||'청하농원 블루베리')+' 외 '+(cart.length-1)+'건');
+    await tossPayments.requestPayment('카드',{
+      amount,orderId,orderName,customerName:name,customerEmail:email||undefined,
       customerMobilePhone:phone.replace(/[^0-9]/g,''),
-      successUrl: location.origin + location.pathname,
-      failUrl: location.origin + location.pathname
+      successUrl:location.origin+location.pathname,failUrl:location.origin+location.pathname
     });
   }catch(e){
-    document.getElementById('cartBody').insertAdjacentHTML('afterbegin','<div class="notice error">'+(e?.message||'결제가 취소되었습니다.')+'</div>');
+    const msg=e?.message||'요청 처리 중 오류가 발생했습니다.';
+    bodyEl.querySelectorAll('.notice.error').forEach(el=>el.remove());
+    bodyEl.insertAdjacentHTML('afterbegin','<div class="notice error">'+String(msg).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))+'</div>');
+    orderSubmitting=false;
+    if(button){button.disabled=false;button.textContent='다시 시도하기';}
   }
 }
 function totalForShipping(subtotal){ return subtotal>=50000?0:4000; }
