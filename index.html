@@ -1,621 +1,148 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>청하농원 | 강화도 블루베리</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>청하농원 | 강화 블루베리</title>
 <style>
-  :root{
-    --cream:#F6F2E9;
-    --cream-2:#EFE9DB;
-    --ink:#23243B;
-    --indigo:#363A6E;
-    --indigo-deep:#20223F;
-    --forest:#33503B;
-    --brass:#A6772E;
-    --brass-light:#C99A4A;
-    --line:#D9D2BF;
-    --text:#2B2A24;
-    --text-soft:#5B5849;
-    --white:#FFFDF8;
-    --radius:2px;
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:var(--cream);
-    color:var(--text);
-    font-family:'Noto Sans KR',sans-serif;
-    line-height:1.6;
-  }
-  h1,h2,h3,.serif{
-    font-family:'Noto Serif KR',serif;
-    color:var(--ink);
-    margin:0;
-  }
-  a{color:inherit;text-decoration:none;}
-  img{max-width:100%;display:block;}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
-  section{padding:96px 0;}
-  .eyebrow{
-    font-size:13px;
-    letter-spacing:.18em;
-    color:var(--brass);
-    font-weight:700;
-    margin-bottom:14px;
-    display:flex;align-items:center;gap:10px;
-  }
-  .eyebrow::before{content:"";width:20px;height:1px;background:var(--brass);display:inline-block;}
-  .btn{
-    display:inline-flex;align-items:center;justify-content:center;
-    padding:15px 30px;
-    font-size:15px;font-weight:700;
-    border-radius:var(--radius);
-    cursor:pointer;
-    border:1px solid transparent;
-    transition:transform .15s ease, box-shadow .15s ease;
-    letter-spacing:.02em;
-  }
-  .btn:active{transform:translateY(1px);}
-  .btn-primary{background:var(--indigo);color:var(--white);}
-  .btn-primary:hover{background:var(--indigo-deep);}
-  .btn-outline{background:transparent;color:var(--ink);border-color:var(--ink);}
-  .btn-outline:hover{background:var(--ink);color:var(--white);}
-
-  /* ---------- Top bar ---------- */
-  .topbar{
-    background:var(--indigo-deep);
-    color:#EDE9DC;
-    font-size:12.5px;
-    letter-spacing:.05em;
-    text-align:center;
-    padding:8px 0;
-  }
-
-  /* ---------- Header ---------- */
-  header{
-    position:sticky;top:0;z-index:50;
-    background:rgba(246,242,233,.92);
-    backdrop-filter:blur(6px);
-    border-bottom:1px solid var(--line);
-  }
-  .nav{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:18px 0;
-  }
-  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:.02em;}
-  .logo .seal{
-    width:34px;height:34px;border-radius:50%;
-    border:1.4px solid var(--forest);
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Noto Serif KR',serif;font-weight:900;font-size:13px;
-    color:var(--forest);
-  }
-  .navlinks{display:flex;gap:34px;font-size:14.5px;font-weight:500;color:var(--text-soft);}
-  .navlinks a:hover{color:var(--ink);}
-  .navcta{display:flex;align-items:center;gap:18px;}
-  .navphone{font-size:13px;color:var(--text-soft);}
-  .navphone b{color:var(--ink);font-size:15px;}
-  @media(max-width:760px){.navlinks{display:none;}}
-
-  /* ---------- Hero ---------- */
-  .hero{padding:72px 0 60px;}
-  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center;}
-  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;}}
-  .hero h1{font-size:46px;line-height:1.28;font-weight:700;margin-bottom:22px;}
-  .hero h1 em{font-style:normal;color:var(--indigo);border-bottom:3px solid var(--brass-light);}
-  .hero p.lead{font-size:16.5px;color:var(--text-soft);max-width:440px;margin-bottom:34px;}
-  .hero-actions{display:flex;gap:14px;margin-bottom:36px;flex-wrap:wrap;}
-  .hero-facts{display:flex;gap:28px;padding-top:26px;border-top:1px solid var(--line);flex-wrap:wrap;}
-  .hero-fact b{display:block;font-family:'Noto Serif KR',serif;font-size:22px;color:var(--ink);}
-  .hero-fact span{font-size:12.5px;color:var(--text-soft);}
-
-  .hero-media{position:relative;}
-  .hero-media .frame{
-    aspect-ratio:4/5;
-    background:linear-gradient(160deg,#2b3a63 0%,#3d3f79 45%,#4a5a8f 100%);
-    border-radius:4px;
-    position:relative;overflow:hidden;
-    display:flex;align-items:flex-end;
-    box-shadow:0 30px 60px -20px rgba(35,36,59,.35);
-  }
-  .hero-media .frame::before{
-    content:"이미지 영역 · hero.jpg\A강화도 블루베리 밭 전경, 아침 햇살";
-    white-space:pre;
-    position:absolute;inset:0;
-    display:flex;align-items:center;justify-content:center;
-    text-align:center;
-    color:rgba(255,255,255,.55);
-    font-size:13px;line-height:1.7;
-    letter-spacing:.02em;
-  }
-  .stamp{
-    position:absolute;left:-26px;bottom:-26px;
-    width:112px;height:112px;border-radius:50%;
-    background:var(--cream);
-    border:1.5px solid var(--forest);
-    display:flex;align-items:center;justify-content:center;
-    box-shadow:0 10px 24px rgba(0,0,0,.12);
-  }
-  .stamp-inner{
-    width:92px;height:92px;border-radius:50%;
-    border:1px dashed var(--forest);
-    display:flex;align-items:center;justify-content:center;
-    text-align:center;
-    color:var(--forest);
-    font-family:'Noto Serif KR',serif;
-    font-size:11px;font-weight:700;line-height:1.5;
-    letter-spacing:.03em;
-  }
-
-  /* ---------- Trust bar ---------- */
-  .trust{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;}
-  .trust-grid{
-    display:grid;grid-template-columns:repeat(4,1fr);
-  }
-  .trust-item{
-    padding:34px 26px;
-    border-right:1px solid var(--line);
-    display:flex;gap:14px;align-items:flex-start;
-  }
-  .trust-item:last-child{border-right:none;}
-  @media(max-width:900px){.trust-grid{grid-template-columns:repeat(2,1fr);}.trust-item:nth-child(2){border-right:none;}}
-  .trust-item .num{font-family:'Noto Serif KR',serif;font-weight:700;color:var(--brass);font-size:15px;}
-  .trust-item h4{font-size:15px;margin:4px 0 6px;color:var(--ink);}
-  .trust-item p{margin:0;font-size:13px;color:var(--text-soft);}
-
-  /* ---------- Story ---------- */
-  .story-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:70px;align-items:center;}
-  @media(max-width:900px){.story-grid{grid-template-columns:1fr;}}
-  .story-media .frame{
-    aspect-ratio:1/1.1;background:linear-gradient(150deg,#3a4a35,#557052);
-    border-radius:4px;position:relative;overflow:hidden;
-  }
-  .story-media .frame::before{
-    content:"이미지 영역 · farmer.jpg\A수확하는 농부의 손";
-    white-space:pre;position:absolute;inset:0;
-    display:flex;align-items:center;justify-content:center;text-align:center;
-    color:rgba(255,255,255,.55);font-size:13px;line-height:1.7;
-  }
-  .story h2{font-size:32px;margin-bottom:22px;line-height:1.4;}
-  .quote{
-    margin:26px 0;padding:22px 26px;
-    border-left:3px solid var(--brass);
-    background:var(--white);
-    font-family:'Noto Serif KR',serif;
-    font-size:16px;color:var(--ink);
-  }
-  .story p.body{color:var(--text-soft);font-size:15px;margin-bottom:16px;}
-  .signature{margin-top:26px;font-family:'Noto Serif KR',serif;font-size:14px;color:var(--text-soft);}
-  .signature b{color:var(--ink);}
-
-  /* ---------- Products ---------- */
-  .products{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-  .section-head{text-align:center;max-width:560px;margin:0 auto 54px;}
-  .section-head h2{font-size:32px;margin-bottom:14px;}
-  .section-head p{color:var(--text-soft);font-size:15px;}
-  .product-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
-  @media(max-width:760px){.product-grid{grid-template-columns:1fr;}}
-  .product-card{
-    border:1px solid var(--line);
-    background:var(--cream);
-    padding:0;overflow:hidden;
-    display:flex;flex-direction:column;
-  }
-  .product-card .p-media{
-    aspect-ratio:16/10;
-    background:linear-gradient(155deg,#2f3765,#4b5590);
-    position:relative;
-  }
-  .product-card .p-media::before{
-    content:attr(data-cap);white-space:pre;
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    text-align:center;color:rgba(255,255,255,.55);font-size:12.5px;line-height:1.7;
-  }
-  .product-card.large .p-media{background:linear-gradient(155deg,#242a4d,#3a3f79);}
-  .p-body{padding:28px 26px 30px;flex:1;display:flex;flex-direction:column;}
-  .p-tag{font-size:12px;letter-spacing:.08em;color:var(--brass);font-weight:700;margin-bottom:10px;}
-  .p-name{font-family:'Noto Serif KR',serif;font-size:22px;color:var(--ink);margin-bottom:8px;}
-  .p-desc{font-size:13.5px;color:var(--text-soft);margin-bottom:20px;}
-  .p-price{display:flex;align-items:baseline;gap:8px;margin-bottom:22px;}
-  .p-price .won{font-family:'Noto Serif KR',serif;font-size:28px;font-weight:700;color:var(--ink);}
-  .p-price .unit{font-size:13px;color:var(--text-soft);}
-  .p-foot{display:flex;gap:12px;margin-top:auto;}
-  .p-foot .btn{flex:1;padding:13px 18px;font-size:14px;}
-
-  /* ---------- Order steps ---------- */
-  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;}
-  @media(max-width:900px){.steps{grid-template-columns:1fr 1fr;}}
-  .step{padding:26px 24px;border-top:2px solid var(--ink);position:relative;}
-  .step .step-num{font-family:'Noto Serif KR',serif;font-size:26px;color:var(--brass);margin-bottom:10px;}
-  .step h4{font-size:15.5px;color:var(--ink);margin-bottom:8px;}
-  .step p{font-size:13px;color:var(--text-soft);margin:0;}
-
-  /* ---------- Order form ---------- */
-  .order{background:var(--indigo-deep);color:#EDE9DC;}
-  .order .section-head h2{color:#FBF9F3;}
-  .order .section-head p{color:#B9B7CC;}
-  .order-panel{
-    background:var(--white);color:var(--text);
-    border-radius:2px;
-    display:grid;grid-template-columns:1fr 1fr;
-    overflow:hidden;
-  }
-  @media(max-width:900px){.order-panel{grid-template-columns:1fr;}}
-  .order-form{padding:44px;}
-  .order-summary{
-    padding:44px;background:var(--cream-2);border-left:1px solid var(--line);
-    display:flex;flex-direction:column;
-  }
-  @media(max-width:900px){.order-summary{border-left:none;border-top:1px solid var(--line);}}
-  .field{margin-bottom:18px;}
-  .field label{display:block;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:7px;}
-  .field input, .field select, .field textarea{
-    width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:2px;
-    font-family:inherit;font-size:14px;background:var(--white);color:var(--text);
-  }
-  .field textarea{resize:vertical;min-height:70px;}
-  .row-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .qty-control{display:flex;align-items:center;border:1px solid var(--line);width:fit-content;}
-  .qty-control button{
-    width:38px;height:38px;border:none;background:var(--cream);cursor:pointer;font-size:16px;color:var(--ink);
-  }
-  .qty-control span{width:42px;text-align:center;font-weight:700;}
-  .summary-line{display:flex;justify-content:space-between;font-size:14px;padding:9px 0;border-bottom:1px dashed var(--line);}
-  .summary-line.total{border-bottom:none;border-top:1.5px solid var(--ink);margin-top:8px;padding-top:16px;font-size:17px;font-weight:700;}
-  .bank-box{
-    margin-top:22px;padding:18px;background:var(--white);border:1px solid var(--line);font-size:13px;color:var(--text-soft);
-  }
-  .bank-box b{color:var(--ink);}
-  .confirm-box{
-    display:none;margin-top:20px;padding:20px;border:1.5px dashed var(--forest);color:var(--forest);
-    font-family:'Noto Serif KR',serif;font-size:13.5px;line-height:1.8;
-  }
-
-  /* ---------- Reviews ---------- */
-  .review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
-  @media(max-width:900px){.review-grid{grid-template-columns:1fr;}}
-  .review-card{background:var(--white);border:1px solid var(--line);padding:26px;}
-  .stars{color:var(--brass);letter-spacing:2px;font-size:14px;margin-bottom:12px;}
-  .review-card p{font-size:14px;color:var(--text-soft);margin-bottom:16px;}
-  .review-who{font-size:12.5px;color:var(--ink);font-weight:700;}
-
-  /* ---------- FAQ ---------- */
-  .faq-item{border-bottom:1px solid var(--line);}
-  .faq-q{
-    padding:20px 4px;display:flex;justify-content:space-between;align-items:center;
-    cursor:pointer;font-weight:700;color:var(--ink);font-size:15px;
-  }
-  .faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease;font-size:13.5px;color:var(--text-soft);}
-  .faq-a p{padding:0 4px 20px;margin:0;}
-  .faq-item.open .faq-a{max-height:200px;}
-  .faq-plus{font-family:'Noto Serif KR',serif;font-size:20px;color:var(--brass);}
-
-  /* ---------- Footer ---------- */
-  footer{background:var(--ink);color:#C9C6DA;padding:64px 0 30px;}
-  .foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:50px;margin-bottom:50px;}
-  @media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:34px;}}
-  .foot-logo{display:flex;align-items:center;gap:10px;color:#FBF9F3;font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;margin-bottom:14px;}
-  footer h5{color:#FBF9F3;font-size:13px;letter-spacing:.06em;margin-bottom:16px;}
-  footer p, footer li{font-size:13px;color:#A9A6BE;margin:0 0 8px;}
-  footer ul{list-style:none;padding:0;margin:0;}
-  .foot-bottom{border-top:1px solid #3a3c5c;padding-top:22px;font-size:12px;color:#8987A3;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
-
-  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;}
-  .reveal.in{opacity:1;transform:translateY(0);}
-</style>
-</head>
+:root{--navy:#20385f;--green:#58724e;--berry:#5b3a82;--ivory:#f6f3ec;--ink:#252525;--muted:#74766f;--line:#ddd8ce;--white:#fffdf8}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ivory);color:var(--ink);font-family:Arial,'Noto Sans KR',sans-serif;line-height:1.6}button{font:inherit;cursor:pointer}a{text-decoration:none;color:inherit}
+header{position:sticky;top:0;z-index:20;background:rgba(246,243,236,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.nav{max-width:1180px;margin:auto;height:72px;padding:0 24px;display:flex;align-items:center;justify-content:space-between}.logo{font-weight:700;letter-spacing:.08em;color:var(--navy)}nav{display:flex;gap:28px;font-size:14px}.cart{border:1px solid var(--navy);background:transparent;border-radius:999px;padding:9px 15px;color:var(--navy)}.count{display:inline-grid;place-items:center;min-width:19px;height:19px;margin-left:4px;border-radius:50%;background:var(--navy);color:white;font-size:11px}
+main{max-width:1180px;margin:auto;padding:0 24px}.hero{min-height:610px;display:grid;place-items:center;text-align:center;padding:80px 20px;background:linear-gradient(145deg,#e8e8df,#f7f3e9 52%,#e5e2d9);border-radius:0 0 34px 34px}.eyebrow{font-size:12px;letter-spacing:.2em;color:var(--green);font-weight:700}.hero h1{font-family:Georgia,serif;font-size:clamp(44px,7vw,86px);font-weight:400;line-height:1.05;margin:18px 0;color:var(--navy)}.hero p{max-width:600px;margin:0 auto 28px;color:#5f625d}.btn{display:inline-block;border:1px solid var(--navy);padding:13px 24px;border-radius:999px;background:var(--navy);color:white}.btn.light{background:transparent;color:var(--navy)}
+.section{padding:95px 0}.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:36px}.section h2{font-family:Georgia,serif;font-weight:400;font-size:42px;line-height:1.15;margin:0;color:var(--navy)}.section-head p{max-width:430px;color:var(--muted);margin:0}.story{display:grid;grid-template-columns:1fr 1fr;gap:24px}.panel{padding:48px;border:1px solid var(--line);border-radius:24px;background:rgba(255,253,248,.65)}.panel.dark{background:var(--navy);color:white;border-color:var(--navy)}.panel.dark h3{color:white}.panel h3{font-size:25px;font-weight:500;margin:0 0 18px}.panel p{color:inherit;opacity:.8}.values{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:22px;overflow:hidden}.value{background:var(--white);padding:32px}.value b{display:block;color:var(--navy);font-size:13px;letter-spacing:.15em;margin-bottom:18px}.value strong{font-size:19px}.value p{font-size:14px;color:var(--muted)}
+.product{display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:start}.photo{min-height:520px;border-radius:28px;background:radial-gradient(circle at 50% 40%,#6e4a91 0 9%,#563d75 10% 15%,transparent 16%),radial-gradient(circle at 38% 57%,#665083 0 8%,transparent 9%),radial-gradient(circle at 63% 59%,#4e416c 0 10%,transparent 11%),linear-gradient(135deg,#d9d7cf,#eee9df);display:grid;place-items:center;color:white;overflow:hidden}.photo span{background:rgba(32,56,95,.72);padding:10px 18px;border-radius:999px;font-size:12px;letter-spacing:.08em}.product-info h2{font-family:Georgia,serif;font-weight:400;font-size:48px;line-height:1.15;color:var(--navy);margin:8px 0 18px}.tag{display:inline-block;border:1px solid #c9c4ba;border-radius:999px;padding:6px 11px;font-size:12px;color:var(--green);margin:0 5px 8px 0}.price{font-size:30px;color:var(--navy);font-weight:700;margin:26px 0}.option{padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--white);margin-bottom:12px}.option-row{display:flex;justify-content:space-between;align-items:center}.option.selected{border:2px solid var(--navy)}.option button{width:100%;text-align:left;border:0;background:transparent}.qty{display:flex;align-items:center;gap:12px;margin-top:18px}.qty button{width:32px;height:32px;border:1px solid var(--line);border-radius:50%;background:white}.buyrow{display:flex;gap:10px;margin-top:22px}.buyrow button{flex:1;padding:15px;border-radius:999px}.add{border:1px solid var(--navy);background:transparent;color:var(--navy)}.buy{border:1px solid var(--navy);background:var(--navy);color:white}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.detail{padding:28px;background:var(--white);border-radius:20px;border:1px solid var(--line)}.detail small{color:var(--green);letter-spacing:.12em}.detail h3{font-size:20px;margin:10px 0}.detail p{font-size:14px;color:var(--muted)}
+footer{background:var(--navy);color:white;margin-top:50px}.foot{max-width:1180px;margin:auto;padding:55px 24px;display:flex;justify-content:space-between;gap:30px}.foot p{opacity:.7;font-size:13px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;display:none;align-items:flex-end;justify-content:center}.modal.open{display:flex}.sheet{width:min(620px,100%);background:var(--ivory);border-radius:28px 28px 0 0;padding:30px;max-height:90vh;overflow:auto}.sheet h2{margin-top:0;color:var(--navy);font-family:Georgia,serif;font-weight:400}.line{display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-bottom:1px solid var(--line)}.checkout{margin-top:22px}.checkout label{display:block;font-size:13px;margin:14px 0 6px}.checkout input,.checkout textarea{width:100%;padding:13px;border:1px solid var(--line);border-radius:10px;background:white}.close{float:right;border:0;background:none;font-size:24px}.notice{padding:14px;border-radius:12px;background:#e8eadf;color:var(--green);font-size:13px;margin:16px 0}.error{background:#f7e5e3;color:#8b3d36}.success{background:#e4eee4;color:#3f6540}
+@media(max-width:760px){nav{display:none}.nav{height:62px}.hero{min-height:500px;padding:60px 18px}.section{padding:65px 0}.section-head{display:block}.section h2{font-size:34px;margin-bottom:15px}.story,.product{grid-template-columns:1fr}.values,.detail-grid{grid-template-columns:1fr 1fr}.photo{min-height:360px}.product-info h2{font-size:38px}.panel{padding:30px}.foot{display:block}.foot div+div{margin-top:25px}}
+@media(max-width:480px){.values,.detail-grid{grid-template-columns:1fr}.buyrow{flex-direction:column}}
+</style></head>
 <body>
-
-<div class="topbar">강화도 자연이 키운 블루베리 · 매주 화·금 당일 수확 발송</div>
-
-<header>
-  <div class="wrap nav">
-    <div class="logo"><span class="seal">靑</span> 청하농원</div>
-    <nav class="navlinks">
-      <a href="#product">제품</a>
-      <a href="#story">농장 이야기</a>
-      <a href="#order-guide">주문 안내</a>
-      <a href="#order">주문하기</a>
-      <a href="#faq">문의</a>
-    </nav>
-    <div class="navcta">
-      <div class="navphone">주문 문의<br><b>032-000-0000</b></div>
-      <a href="#order" class="btn btn-primary">바로 주문</a>
-    </div>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <div class="eyebrow">GANGHWA ISLAND FARM</div>
-      <h1>강화도 갯바람이 키운<br><em>정직한 블루베리</em>,<br>수확 당일 보내드립니다</h1>
-      <p class="lead">청하농원은 강화도에서 3대째 농사를 지어온 가족 농원입니다. 무농약 재배 원칙과 수확일자 표기를 지키며, 밭에서 식탁까지의 거리를 가장 짧게 만듭니다.</p>
-      <div class="hero-actions">
-        <a href="#order" class="btn btn-primary">지금 주문하기</a>
-        <a href="#story" class="btn btn-outline">농장 이야기 보기</a>
-      </div>
-      <div class="hero-facts">
-        <div class="hero-fact"><b>3대</b><span>이어온 강화도 농원</span></div>
-        <div class="hero-fact"><b>당일</b><span>수확 후 24시간 내 발송</span></div>
-        <div class="hero-fact"><b>무농약</b><span>친환경 재배 인증</span></div>
-      </div>
-    </div>
-    <div class="hero-media">
-      <div class="frame"></div>
-      <div class="stamp"><div class="stamp-inner">청하농원<br>강화도 직송<br>정직 인증</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="trust" style="padding:0;">
-  <div class="wrap trust-grid">
-    <div class="trust-item"><div><div class="num">01</div><h4>수확일자 표기</h4><p>모든 상품에 수확일을 표기하여 신선도를 그대로 알려드립니다.</p></div></div>
-    <div class="trust-item"><div><div class="num">02</div><h4>무농약 재배</h4><p>친환경 인증 기준에 따라 재배 과정을 투명하게 공개합니다.</p></div></div>
-    <div class="trust-item"><div><div class="num">03</div><h4>산지 직송</h4><p>중간 유통 없이 강화도 밭에서 바로 포장해 보내드립니다.</p></div></div>
-    <div class="trust-item"><div><div class="num">04</div><h4>사업자 정보 공개</h4><p>상호·연락처·계좌 등 판매자 정보를 하단에 모두 명시합니다.</p></div></div>
-  </div>
-</section>
-
-<section id="story" class="story reveal">
-  <div class="wrap story-grid">
-    <div class="story-media"><div class="frame"></div></div>
-    <div class="story">
-      <div class="eyebrow">FARM STORY</div>
-      <h2>할아버지의 밭을 이어받아,<br>같은 자리에서 블루베리를 키웁니다</h2>
-      <p class="body">청하농원은 강화도 북부의 볕 좋은 구릉지에서 블루베리를 재배합니다. 바닷바람과 일교차가 열매의 당도를 올려주고, 3대에 걸쳐 다져온 토양은 화학비료 없이도 튼튼한 나무를 길러냅니다.</p>
-      <div class="quote">"팔기 위한 열매가 아니라, 저희 가족이 먹는 그대로를 보내드립니다."</div>
-      <p class="body">수확은 오전 이슬이 걷힌 직후에만 진행하며, 당일 선별·포장을 마친 상품만 발송합니다. 궁금한 재배 과정이 있다면 언제든 문의해 주세요.</p>
-      <div class="signature"><b>청하농원 대표</b> · 강화도 3대 농부</div>
-    </div>
-  </div>
-</section>
-
-<section id="product" class="products reveal">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow" style="justify-content:center;">PRODUCT</div>
-      <h2>오늘 수확한 블루베리, 두 가지 구성</h2>
-      <p>모든 상품은 주문 접수 후 가장 가까운 수확일에 맞춰 포장·발송됩니다.</p>
-    </div>
-    <div class="product-grid">
-      <div class="product-card">
-        <div class="p-media" data-cap="이미지 영역 · product-500g.jpg&#10;500g 포장 패키지 컷"></div>
-        <div class="p-body">
-          <div class="p-tag">데일리 사이즈</div>
-          <div class="p-name">강화도 블루베리 500g</div>
-          <div class="p-desc">한 가족이 2~3일 부담없이 즐기기 좋은 기본 구성입니다.</div>
-          <div class="p-price"><span class="won">15,000원</span><span class="unit">/ 500g</span></div>
-          <div class="p-foot">
-            <button class="btn btn-outline" onclick="addToOrder('500g', 15000)">주문서에 담기</button>
-          </div>
-        </div>
-      </div>
-      <div class="product-card large">
-        <div class="p-media" data-cap="이미지 영역 · product-1kg.jpg&#10;1kg 우드 박스 컷"></div>
-        <div class="p-body">
-          <div class="p-tag">넉넉한 구성</div>
-          <div class="p-name">강화도 블루베리 1kg</div>
-          <div class="p-desc">선물이나 여러 날 두고 드시기 좋은 넉넉한 구성입니다.</div>
-          <div class="p-price"><span class="won">30,000원</span><span class="unit">/ 1kg</span></div>
-          <div class="p-foot">
-            <button class="btn btn-primary" onclick="addToOrder('1kg', 30000)">주문서에 담기</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="order-guide" class="reveal">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow" style="justify-content:center;">HOW TO ORDER</div>
-      <h2>주문은 이렇게 진행됩니다</h2>
-      <p>일반 농산물 직거래와 동일한 방식으로, 주문서 작성 후 무통장입금으로 접수됩니다.</p>
-    </div>
-    <div class="steps">
-      <div class="step"><div class="step-num">01</div><h4>주문서 작성</h4><p>상품과 수량을 선택하고 배송 정보를 입력합니다.</p></div>
-      <div class="step"><div class="step-num">02</div><h4>무통장 입금</h4><p>안내된 계좌로 입금자명과 동일하게 입금합니다.</p></div>
-      <div class="step"><div class="step-num">03</div><h4>입금 확인</h4><p>영업일 기준 반나절 내 입금을 확인해 드립니다.</p></div>
-      <div class="step"><div class="step-num">04</div><h4>수확·발송</h4><p>가장 가까운 수확일에 맞춰 택배로 발송합니다.</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="order" class="order reveal">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow" style="justify-content:center;">ORDER FORM</div>
-      <h2>주문서 작성</h2>
-      <p>주문 접수 후 입력하신 연락처로 확인 연락을 드립니다.</p>
-    </div>
-    <div class="order-panel">
-      <form class="order-form" id="orderForm" onsubmit="return submitOrder(event)">
-        <div class="field">
-          <label>상품 선택</label>
-          <select id="prodSelect" onchange="syncFromSelect()">
-            <option value="500g|15000">강화도 블루베리 500g — 15,000원</option>
-            <option value="1kg|30000">강화도 블루베리 1kg — 30,000원</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>수량</label>
-          <div class="qty-control">
-            <button type="button" onclick="changeQty(-1)">−</button>
-            <span id="qtyView">1</span>
-            <button type="button" onclick="changeQty(1)">＋</button>
-          </div>
-        </div>
-        <div class="row-2">
-          <div class="field"><label>주문자 이름</label><input type="text" required placeholder="홍길동"></div>
-          <div class="field"><label>연락처</label><input type="tel" required placeholder="010-0000-0000"></div>
-        </div>
-        <div class="field"><label>배송지 주소</label><input type="text" required placeholder="도로명 주소를 입력해 주세요"></div>
-        <div class="row-2">
-          <div class="field"><label>입금자명</label><input type="text" required placeholder="주문자와 다르면 별도 입력"></div>
-          <div class="field"><label>희망 수령일</label><input type="date"></div>
-        </div>
-        <div class="field"><label>요청 사항 (선택)</label><textarea placeholder="배송 시 요청 사항을 남겨주세요"></textarea></div>
-        <button type="submit" class="btn btn-primary" style="width:100%;padding:16px;">주문 접수하기</button>
-      </form>
-      <div class="order-summary">
-        <h4 style="font-family:'Noto Serif KR',serif;font-size:17px;margin:0 0 18px;color:var(--ink);">주문 요약</h4>
-        <div class="summary-line"><span id="sumName">강화도 블루베리 500g</span><span id="sumUnit">15,000원</span></div>
-        <div class="summary-line"><span>수량</span><span id="sumQty">1개</span></div>
-        <div class="summary-line total"><span>결제 예정 금액</span><span id="sumTotal">15,000원</span></div>
-        <div class="bank-box">
-          <b>무통장 입금 계좌</b><br>
-          농협 000-0000-0000-00 (예금주: 청하농원)<br>
-          ※ 주문 접수 후 24시간 내 미입금 시 자동 취소됩니다.
-        </div>
-        <div class="confirm-box" id="confirmBox">
-          <b>주문이 접수되었습니다.</b><br>
-          주문번호 CH-<span id="orderNo"></span><br>
-          안내된 계좌로 입금해 주시면 확인 후 순차 발송됩니다.<br>
-          문의: 032-000-0000
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="reviews reveal">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow" style="justify-content:center;">REVIEW</div>
-      <h2>먼저 받아보신 분들의 이야기</h2>
-    </div>
-    <div class="review-grid">
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <p>알이 크고 단단해서 물러짐 없이 오래 두고 먹었어요. 아이가 마트 블루베리는 안 먹더니 이건 잘 먹네요.</p>
-        <div class="review-who">인천 · 30대 구매자</div>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <p>수확일이 적혀 있어서 믿음이 갔습니다. 받자마자 바로 딴 티가 나요, 다음에도 재주문할게요.</p>
-        <div class="review-who">서울 · 40대 구매자</div>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★☆</div>
-        <p>포장이 꼼꼼하고 냉장 상태로 잘 왔어요. 1kg으로 시켰는데 선물하기에도 좋을 것 같아요.</p>
-        <div class="review-who">경기 · 50대 구매자</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="faq" class="reveal">
-  <div class="wrap" style="max-width:760px;">
-    <div class="section-head">
-      <div class="eyebrow" style="justify-content:center;">FAQ</div>
-      <h2>배송 및 교환·환불 안내</h2>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span>배송비는 얼마인가요?</span><span class="faq-plus">+</span></div>
-        <div class="faq-a"><p>제주·도서산간을 제외한 전 지역 3,000원이며, 5만원 이상 구매 시 무료입니다.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span>신선식품인데 교환·환불이 되나요?</span><span class="faq-plus">+</span></div>
-        <div class="faq-a"><p>수령 후 24시간 이내 상태 사진과 함께 연락 주시면 교환 또는 환불해 드립니다.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span>발송은 언제 되나요?</span><span class="faq-plus">+</span></div>
-        <div class="faq-a"><p>매주 화·금 수확분에 한해 당일 또는 익일 발송을 원칙으로 합니다.</p></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span>대량 주문(선물용)도 가능한가요?</span><span class="faq-plus">+</span></div>
-        <div class="faq-a"><p>가능합니다. 전화(032-000-0000) 또는 주문서 요청사항에 남겨주시면 안내드립니다.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <div class="foot-grid">
-      <div>
-        <div class="foot-logo"><span class="seal" style="border-color:#8987A3;color:#C9C6DA;">靑</span> 청하농원</div>
-        <p>강화도에서 3대째 이어온 블루베리 농원입니다.<br>정직하게 기르고, 정직하게 보내드립니다.</p>
-      </div>
-      <div>
-        <h5>사업자 정보</h5>
-        <ul>
-          <li>상호명 : 청하농원</li>
-          <li>대표자 : 000</li>
-          <li>사업자등록번호 : 000-00-00000</li>
-          <li>통신판매업신고 : 제0000-인천강화-00000호</li>
-          <li>주소 : 인천광역시 강화군 000</li>
-        </ul>
-      </div>
-      <div>
-        <h5>고객 안내</h5>
-        <ul>
-          <li>고객센터 : 032-000-0000</li>
-          <li>운영시간 : 평일 09:00 ~ 18:00</li>
-          <li>입금계좌 : 농협 000-0000-0000-00</li>
-          <li>예금주 : 청하농원</li>
-        </ul>
-      </div>
-    </div>
-    <div class="foot-bottom">
-      <span>© 2026 청하농원. All rights reserved.</span>
-      <span>본 사이트는 데모 목적으로 제작되었으며 사업자 정보는 예시입니다.</span>
-    </div>
-  </div>
-</footer>
-
+<header><div class="nav"><a href="#top" class="logo">CHEONGHA FARM</a><nav><a href="#story">BRAND</a><a href="#product">BLUEBERRY</a><a href="#promise">PROMISE</a></nav><button class="cart" onclick="openCart()">장바구니 <span id="cartCount" class="count">0</span></button></div></header>
+<main id="top">
+<section class="hero"><div><div class="eyebrow">PREMIUM BLUEBERRIES FROM GANGHWA</div><h1>강화를 닮아,<br>정직하게.</h1><p>좋은 블루베리는 자연이 키우고,<br>좋은 브랜드는 시간이 키운다고 믿습니다.</p><a class="btn" href="#product">블루베리 만나보기</a></div></section>
+<section class="section" id="story"><div class="section-head"><h2>Why Cheongha</h2><p>강화에서 태어나 살아온 농부의 마음으로, 내 가족에게 먼저 권할 수 있는 블루베리를 만듭니다.</p></div><div class="story"><div class="panel dark"><h3>강화에서 시작했습니다.</h3><p>오래 바라본 땅에서 계절을 배우고, 한 알의 열매가 익어가는 시간을 기다립니다. 빠른 수확보다 제대로 익은 맛을 선택합니다.</p></div><div class="panel"><h3>정직함을 기준으로 삼습니다.</h3><p>재배부터 수확, 선별, 포장까지 우리가 지키고 싶은 기준을 하나씩 쌓아갑니다. 먹는 사람의 식탁을 생각하며 보냅니다.</p></div></div></section>
+<section class="section"><div class="values"><div class="value"><b>01 HONEST</b><strong>정직</strong><p>과장하지 않고 우리가 지킨 것만 이야기합니다.</p></div><div class="value"><b>02 GANGHWA</b><strong>산지</strong><p>강화의 땅과 계절을 브랜드의 중심에 둡니다.</p></div><div class="value"><b>03 SEASON</b><strong>제철</strong><p>가장 좋은 때를 기다려 수확합니다.</p></div><div class="value"><b>04 TRUST</b><strong>신뢰</strong><p>한 번의 구매보다 오래가는 관계를 생각합니다.</p></div></div></section>
+<section class="section" id="product"><div class="section-head"><h2>Blueberry</h2><p>청하농원의 첫 번째 상품. 산지의 계절을 가장 정직한 모습으로 담았습니다.</p></div><div class="product"><div class="photo"><span>CHEONGHA FARM · GANGHWA</span></div><div class="product-info"><div><span class="tag">GANGHWA</span><span class="tag">SEASONAL HARVEST</span><span class="tag">FRESH PACKING</span></div><h2 id="productName">청하농원<br>프리미엄 블루베리</h2><p id="productDesc">상품 정보를 불러오는 중입니다.</p><div class="price"><span id="startingPrice">-</span> <small style="font-size:14px;color:#777;font-weight:400">부터</small></div><div id="options"></div><div class="qty"><span>수량</span><button onclick="changeQty(-1)">−</button><b id="qty">1</b><button onclick="changeQty(1)">＋</button></div><div class="buyrow"><button class="add" onclick="addCart()">장바구니 담기</button><button class="buy" onclick="buyNow()">바로 구매하기</button></div></div></div></section>
+<section class="section" id="promise"><div class="section-head"><h2>From Farm<br>to Table</h2><p>수확한 순간부터 고객의 식탁까지. 청하농원이 지키는 세 가지 약속입니다.</p></div><div class="detail-grid"><div class="detail"><small>01 HARVEST</small><h3>제때 수확합니다.</h3><p>열매의 상태와 계절을 살펴 가장 좋은 수확 시점을 선택합니다.</p></div><div class="detail"><small>02 SELECT</small><h3>꼼꼼히 살핍니다.</h3><p>상품으로 보내기 전 상태를 확인하고 정성스럽게 포장합니다.</p></div><div class="detail"><small>03 DELIVER</small><h3>신선하게 보냅니다.</h3><p>산지의 신선함이 오래 남도록 배송 과정까지 생각합니다.</p></div></div></section>
+</main><footer><div class="foot"><div><b>CHEONGHA FARM</b><p>강화를 닮아, 정직하게.</p></div><div><p>강화에서 자라고, 우리의 식탁으로 갑니다.</p><p>© 2026 CHEONGHA FARM. All rights reserved.</p></div></div></footer>
+<div id="modal" class="modal" onclick="if(event.target===this)closeCart()"><div class="sheet"><button class="close" onclick="closeCart()">×</button><h2 id="sheetTitle">장바구니</h2><div id="cartBody"></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.tosspayments.com/v1/payment"></script>
 <script>
-  // ---- order state (in-memory only) ----
-  let state = { name:'강화도 블루베리 500g', price:15000, qty:1 };
+const SUPABASE_URL='https://bnhfjhixmjlyinjruhpi.supabase.co';
+const SUPABASE_KEY='sb_publishable_7NUZCNlQs8-nDViiUpYppA_8F0PZJx5';
+const db=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY):null;
+const TOSS_CLIENT_KEY='test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
+let product=null,options=[],selectedOption=null,qty=1,cart=[];
 
-  function syncFromSelect(){
-    const [name, price] = document.getElementById('prodSelect').value.split('|');
-    state.name = '강화도 블루베리 ' + name;
-    state.price = parseInt(price, 10);
-    renderSummary();
+const won=n=>Number(n).toLocaleString('ko-KR')+'원';
+async function loadProduct(){
+  const fallbackProduct={id:'6b3c22c2-43ba-4a84-8c3f-100966f563e0',name:'청하농원 프리미엄 블루베리',description:'강화에서 정성껏 재배하고 수확한 청하농원의 프리미엄 블루베리입니다.',short_description:'강화의 계절을 담은 프리미엄 블루베리',status:'active'};
+  const fallbackOptions=[
+    {id:'5b000f9e-37b5-4686-bd4b-ec4ec6433d8f',option_name:'500g',weight_grams:500,price:29000,stock:100,is_active:true,sort_order:1},
+    {id:'d16ede38-e3e9-4aa8-979e-fab0dc86f559',option_name:'1kg',weight_grams:1000,price:52000,stock:100,is_active:true,sort_order:2}
+  ];
+  try {
+    if(!db) throw new Error('Supabase SDK를 불러오지 못했습니다.');
+    const {data,error}=await db.from('products').select('id,name,description,short_description,status,product_options(id,option_name,weight_grams,price,stock,is_active,sort_order)').eq('slug','premium-blueberry').eq('status','active').single();
+    if(error) throw error;
+    product=data; options=(data.product_options||[]).filter(x=>x.is_active).sort((a,b)=>a.sort_order-b.sort_order);
+    if(!options.length) throw new Error('판매 옵션이 없습니다.');
+  } catch(e) {
+    product=fallbackProduct; options=fallbackOptions;
+    const desc=document.getElementById('productDesc');
+    if(desc) desc.textContent=fallbackProduct.description;
+    console.warn('상품 정보를 임시 표시합니다:',e);
   }
-  function addToOrder(name, price){
-    document.getElementById('prodSelect').value = name + '|' + price;
-    state.name = '강화도 블루베리 ' + name;
-    state.price = price;
-    renderSummary();
-    document.getElementById('order').scrollIntoView({behavior:'smooth'});
+  selectedOption=options[0]||null;
+  document.getElementById('productName').innerHTML=product.name.replace(' ','<br>');
+  document.getElementById('productDesc').textContent=product.description||product.short_description||'';
+  document.getElementById('startingPrice').textContent=options.length?won(Math.min(...options.map(x=>x.price))):'-';
+  renderOptions();
+}
+function renderOptions(){
+  document.getElementById('options').innerHTML=options.map(o=>`<div class="option ${selectedOption?.id===o.id?'selected':''}"><button onclick="selectOption('${o.id}')"><div class="option-row"><div><b>${o.option_name}</b><br><small>${o.stock>0?'재고 '+o.stock+'개':'품절'}</small></div><strong>${won(o.price)}</strong></div></button></div>`).join('');
+}
+function selectOption(id){selectedOption=options.find(x=>x.id===id)||selectedOption;renderOptions()}
+function changeQty(n){qty=Math.max(1,Math.min(20,qty+n));document.getElementById('qty').textContent=qty}
+function addCart(){if(!selectedOption)return alert('상품 옵션을 선택해주세요.');if(Number(selectedOption.stock)<qty)return alert('재고가 부족합니다.');const found=cart.find(x=>x.option.id===selectedOption.id);if(found)found.qty=Math.min(20,found.qty+qty);else cart.push({option:selectedOption,qty:qty});updateCount();openCart()}
+function updateCount(){document.getElementById('cartCount').textContent=cart.reduce((s,x)=>s+x.qty,0)}
+function openCart(){document.getElementById('sheetTitle').textContent='장바구니';renderCart();document.getElementById('modal').classList.add('open')}
+function closeCart(){document.getElementById('modal').classList.remove('open')}
+function removeCart(i){cart.splice(i,1);updateCount();renderCart()}
+function renderCart(){
+  const b = document.getElementById('cartBody');
+  if (!cart.length) {
+    b.innerHTML = `<div class="notice">아직 담긴 상품이 없습니다.</div>
+      <button class="btn" onclick="closeCart();document.getElementById('product').scrollIntoView({behavior:'smooth'})">상품 보러가기</button>`;
+    return;
   }
-  function changeQty(delta){
-    state.qty = Math.max(1, state.qty + delta);
-    document.getElementById('qtyView').textContent = state.qty;
-    renderSummary();
-  }
-  function renderSummary(){
-    document.getElementById('sumName').textContent = state.name;
-    document.getElementById('sumUnit').textContent = state.price.toLocaleString() + '원';
-    document.getElementById('sumQty').textContent = state.qty + '개';
-    document.getElementById('sumTotal').textContent = (state.price * state.qty).toLocaleString() + '원';
-  }
-  function submitOrder(e){
-    e.preventDefault();
-    const box = document.getElementById('confirmBox');
-    document.getElementById('orderNo').textContent = Math.floor(100000 + Math.random()*899999);
-    box.style.display = 'block';
-    box.scrollIntoView({behavior:'smooth', block:'nearest'});
-    return false;
-  }
-  function toggleFaq(el){
-    el.parentElement.classList.toggle('open');
-  }
+  const total = cart.reduce((sum, item) => sum + item.option.price * item.qty, 0);
+  const shipping = total >= 50000 ? 0 : 4000;
+  b.innerHTML = cart.map((item, index) => `
+    <div class="line">
+      <div>
+        <b>${product.name}</b><br>
+        <small>${item.option.option_name} · ${item.qty}개</small><br>
+        <button onclick="removeCart(${index})" style="border:0;background:none;padding:4px 0;color:#777">삭제</button>
+      </div>
+      <strong>${won(item.option.price * item.qty)}</strong>
+    </div>`).join('') + `
+    <div class="line"><b>상품금액</b><strong>${won(total)}</strong></div>
+    <div class="line"><b>배송비</b><strong>${shipping === 0 ? '무료' : won(shipping)}</strong></div>
+    <div class="line"><b>총 결제 예정금액</b><strong>${won(total + shipping)}</strong></div>
+    <div class="checkout"><button class="btn" style="width:100%" onclick="checkout()">주문서 작성하기</button></div>`;
+}
 
-  // ---- scroll reveal ----
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
-  }, {threshold:.12});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-</script>
-</body>
-</html>
+function buyNow(){if(!selectedOption)return;cart=[{option:selectedOption,qty}];updateCount();checkout()}
+function checkout(){document.getElementById('sheetTitle').textContent='주문서';document.getElementById('cartBody').innerHTML=`<div class="notice">주문 정보를 확인한 뒤 결제하기를 누르면 토스페이먼츠 결제창으로 이동합니다.</div><div class="checkout"><label>주문자명 *</label><input id="c_name" placeholder="홍길동"><label>휴대폰 *</label><input id="c_phone" placeholder="010-0000-0000"><label>이메일</label><input id="c_email" type="email" placeholder="example@email.com"><label>우편번호</label><input id="c_postcode" placeholder="우편번호"><label>주소 *</label><input id="c_address1" placeholder="주소를 입력해주세요"><label>상세주소</label><input id="c_address2" placeholder="상세주소"><label>배송 요청사항</label><textarea id="c_memo" rows="3" placeholder="배송 요청사항을 입력해주세요"></textarea><button class="btn" style="width:100%;margin-top:20px" onclick="submitOrder()">결제하기</button></div>`}
+async function submitOrder(){
+  const name=document.getElementById('c_name').value.trim(),phone=document.getElementById('c_phone').value.trim(),email=document.getElementById('c_email').value.trim(),postcode=document.getElementById('c_postcode').value.trim(),address1=document.getElementById('c_address1').value.trim(),address2=document.getElementById('c_address2').value.trim(),memo=document.getElementById('c_memo').value.trim();
+  if(!name||!phone||!address1)return alert('주문자명, 휴대폰, 주소는 필수입니다.');
+  if(!cart.length)return alert('주문 상품이 없습니다.');
+  if(TOSS_CLIENT_KEY.includes('여기에_'))return alert('토스페이먼츠 클라이언트 키를 먼저 입력해주세요.');
+
+  if(!db){alert('주문 및 결제는 인터넷에 게시된 사이트에서 이용해주세요. 현재 파일 미리보기에서는 장바구니만 테스트할 수 있습니다.');return;}
+  const {data,error}=await db.functions.invoke('create-order',{body:{p_customer_name:name,p_phone:phone,p_email:email,p_postcode:postcode,p_address1:address1,p_address2:address2,p_shipping_memo:memo,p_items:cart.map(x=>({product_option_id:x.option.id,quantity:x.qty}))}});
+  if(error){document.getElementById('cartBody').insertAdjacentHTML('afterbegin','<div class="notice error">'+(error.message||'주문 생성에 실패했습니다.')+'</div>');return}
+
+  const subtotal=cart.reduce((s,x)=>s+x.option.price*x.qty,0); const total=subtotal+totalForShipping(subtotal);
+  const tossPayments=TossPayments(TOSS_CLIENT_KEY);
+  const orderName=cart.length===1?product.name+' '+cart[0].option.option_name:(product.name+' 외 '+(cart.length-1)+'건');
+
+  try{
+    await tossPayments.requestPayment('카드', {
+      amount: data.total_amount || total,
+      orderId: data.order_number,
+      orderName,
+      customerName:name,
+      customerEmail:email || undefined,
+      customerMobilePhone:phone.replace(/[^0-9]/g,''),
+      successUrl: location.origin + location.pathname,
+      failUrl: location.origin + location.pathname
+    });
+  }catch(e){
+    document.getElementById('cartBody').insertAdjacentHTML('afterbegin','<div class="notice error">'+(e?.message||'결제가 취소되었습니다.')+'</div>');
+  }
+}
+function totalForShipping(subtotal){ return subtotal>=50000?0:4000; }
+
+async function handlePaymentResult(){
+  const q=new URLSearchParams(location.search);
+  const paymentKey=q.get('paymentKey'),orderId=q.get('orderId'),amount=q.get('amount'),code=q.get('code'),message=q.get('message');
+  if(code){ history.replaceState({},'',location.pathname); openCart(); document.getElementById('sheetTitle').textContent='결제 실패'; document.getElementById('cartBody').innerHTML='<div class="notice error">'+(message||'결제에 실패했습니다.')+'</div>'; return; }
+  if(!paymentKey||!orderId||!amount)return;
+  history.replaceState({},'',location.pathname);
+  const {data,error}=await db.functions.invoke('confirm-payment',{body:{paymentKey,orderId,amount:Number(amount)}});
+  openCart();
+  document.getElementById('sheetTitle').textContent=data?.success?'결제 완료':'결제 처리';
+  if(error||!data?.success){
+    document.getElementById('cartBody').innerHTML='<div class="notice error">결제 승인 처리에 실패했습니다. 주문번호를 확인하고 청하농원으로 문의해주세요.</div>';
+    return;
+  }
+  document.getElementById('cartBody').innerHTML='<div class="notice success"><b>결제가 완료되었습니다.</b><br>주문번호 <strong>'+orderId+'</strong></div><p>청하농원에서 주문을 확인한 후 정성껏 준비하겠습니다.</p><button class="btn" style="width:100%" onclick="cart=[];updateCount();closeCart()">쇼핑 계속하기</button>';
+}
+
+loadProduct();
+handlePaymentResult();
+</script></body></html>
